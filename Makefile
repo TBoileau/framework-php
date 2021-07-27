@@ -15,8 +15,11 @@ eslint:
 stylelint:
 	npx stylelint "assets/scss/**/*.scss"
 
+phpinsight:
+	vendor/bin/phpinsights --no-interaction
+
 .PHONY: fix
 fix:
 	npx eslint assets/ --fix
 	npx stylelint "assets/scss/**/*.scss" --fix
-
+	vendor/bin/php-cs-fixer fix
