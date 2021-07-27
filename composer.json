@@ -8,6 +8,11 @@
             "TBoileau\\Oc\\Php\\Project5\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "TBoileau\\Oc\\Php\\Project5\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "TBoileau",
@@ -19,7 +24,9 @@
         "php": "^8.0",
         "symfony/dotenv": "^5.3",
         "twig/twig": "^3.3",
-        "symfony/http-foundation": "^5.3"
+        "symfony/http-foundation": "^5.3",
+        "psr/container": "^1.0",
+        "phpunit/phpunit": "^9.5"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.3",

@@ -46,3 +46,5 @@ jobs:
           make install env=test user=root password=password host=localhost port=3306 database=oc_php_project_5
       - name: Analyse
         run: make analyse
+      - name: Tests
+        run: make tests

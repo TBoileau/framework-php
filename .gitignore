@@ -3,3 +3,4 @@
 .env.*.local
 *.cache
 /public/build/
+/var/

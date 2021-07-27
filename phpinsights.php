@@ -3,18 +3,10 @@
 declare(strict_types=1);
 
 use NunoMaduro\PhpInsights\Domain\Insights\CyclomaticComplexityIsHigh;
-use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses;
-use NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
-use SlevomatCodingStandard\Sniffs\Classes\SuperfluousAbstractClassNamingSniff;
-use SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff;
-use SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
-use SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff;
-use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
-use SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff;
 
 return [
     /*
@@ -30,7 +22,7 @@ return [
     |
      */
 
-    'preset' => 'default',
+    'preset' => 'symfony',
 
     /*
     |--------------------------------------------------------------------------
@@ -65,12 +57,14 @@ return [
 
     'exclude' => [
         'phpinsights.php',
+        'public/index.php',
     ],
 
     'add' => [
     ],
 
     'remove' => [
+        DisallowYodaComparisonSniff::class,
         SpaceAfterNotSniff::class,
     ],
 
@@ -84,7 +78,7 @@ return [
             'ignoreComments' => true,
         ],
         CyclomaticComplexityIsHigh::class => [
-            'maxComplexity' => 4,
+            'maxComplexity' => 10,
         ],
     ],
 
@@ -101,7 +95,7 @@ return [
 
     'requirements' => [
         'min-quality' => 90,
-        'min-complexity' => 90,
+        'min-complexity' => 75,
         'min-architecture' => 90,
         'min-style' => 100,
         'disable-security-check' => false,

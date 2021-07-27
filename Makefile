@@ -45,3 +45,13 @@ analyse:
 	make phpcpd
 	make phpmd
 	make phpinsight
+
+unit-tests:
+	php vendor/bin/phpunit --testdox --testsuite=unit
+
+functional-tests:
+	php vendor/bin/phpunit --testdox --testsuite=functional
+
+.PHONY: tests
+tests:
+	php vendor/bin/phpunit --testdox
