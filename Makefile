@@ -7,4 +7,4 @@ install:
 	sed -i -e 's/port/$(port)/' .env.$(env).local
 	sed -i -e 's/database/$(database)/' .env.$(env).local
 	composer install --no-progress --prefer-dist --optimize-autoloader
-
+	yarn install
