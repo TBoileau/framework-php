@@ -15,11 +15,33 @@ eslint:
 stylelint:
 	npx stylelint "assets/scss/**/*.scss"
 
+composer:
+	composer valid
+
 phpinsight:
 	vendor/bin/phpinsights --no-interaction
+
+phpcpd:
+	vendor/bin/phpcpd src/
+
+phpmd:
+	vendor/bin/phpmd src/ text .phpmd.xml
 
 .PHONY: fix
 fix:
 	npx eslint assets/ --fix
 	npx stylelint "assets/scss/**/*.scss" --fix
 	vendor/bin/php-cs-fixer fix
+
+twig:
+	vendor/bin/twigcs templates
+
+.PHONY: analyse
+analyse:
+	make eslint
+	make stylelint
+	make composer
+	make twig
+	make phpcpd
+	make phpmd
+	make phpinsight
