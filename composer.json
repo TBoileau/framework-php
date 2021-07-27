@@ -23,6 +23,7 @@
     },
     "require-dev": {
         "symfony/var-dumper": "^5.3",
-        "nunomaduro/phpinsights": "^2.0"
+        "nunomaduro/phpinsights": "^2.0",
+        "friendsoftwig/twigcs": "^5.0"
     }
 }
