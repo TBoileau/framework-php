@@ -1,0 +1,21 @@
+{
+    "name": "tboileau/oc-php-project-5",
+    "description": "OpenClassrooms - Développeur d'application PHP/Symfony - Projet 5",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tboileau\\OcPhpProject5\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "TBoileau",
+            "email": "t-boileau@email.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "symfony/dotenv": "^5.3"
+    }
+}
