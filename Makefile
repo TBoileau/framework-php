@@ -12,6 +12,11 @@ install:
 eslint:
 	npx eslint assets/
 
+stylelint:
+	npx stylelint "assets/scss/**/*.scss"
+
 .PHONY: fix
 fix:
 	npx eslint assets/ --fix
+	npx stylelint "assets/scss/**/*.scss" --fix
+
