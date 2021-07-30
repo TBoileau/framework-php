@@ -18,5 +18,10 @@ interface ContainerInterface extends BaseContainer
 
     public function factory(string $id, string $factory, string $method = 'create'): ContainerInterface;
 
+    /**
+     * @param array<array-key, class-string> $excludes
+     */
+    public function resource(string $namespace, string $tag, array $excludes = []): ContainerInterface;
+
     public function instanceOf(string $interface, string $tag): ContainerInterface;
 }

@@ -9,5 +9,5 @@ interface TaggedServicesInterface
     /**
      * @return array<array-key, string>
      */
-    public static function getTags(): array;
+    public static function getTaggedServices(): array;
 }

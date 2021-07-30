@@ -10,7 +10,9 @@ use SlevomatCodingStandard\Sniffs\Classes\SuperfluousAbstractClassNamingSniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
+use SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
+use SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff;
 
 return [
     /*
@@ -68,6 +70,7 @@ return [
     ],
 
     'remove' => [
+        AlphabeticallySortedUsesSniff::class,
         DisallowYodaComparisonSniff::class,
         SpaceAfterNotSniff::class,
         ForbiddenSetterSniff::class,
@@ -82,6 +85,11 @@ return [
             'exclude' => [
                 'src/DependencyInjection/Container.php',
                 'src/Validator/Validator.php',
+            ],
+        ],
+        ParameterTypeHintSniff::class => [
+            'exclude' => [
+                'src/Validator/ConstraintViolationList.php',
             ],
         ],
         LineLengthSniff::class => [
@@ -110,7 +118,7 @@ return [
 
     'requirements' => [
         'min-quality' => 90,
-        'min-complexity' => 90,
+        'min-complexity' => 85,
         'min-architecture' => 90,
         'min-style' => 100,
         'disable-security-check' => false,

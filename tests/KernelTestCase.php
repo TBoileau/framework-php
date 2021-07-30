@@ -16,6 +16,10 @@ abstract class KernelTestCase extends TestCase
             __DIR__.'/../templates',
             __DIR__.'/Unit/Fixtures/templates',
         ]);
+        $kernel->getContainer()->resource(
+            'TBoileau\\Oc\\Php\\Project5\\Tests\\Unit\\Fixtures\\Controller',
+            'controller',
+        );
 
         return $kernel;
     }

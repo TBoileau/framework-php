@@ -7,12 +7,17 @@ namespace TBoileau\Oc\Php\Project5\Validator;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use TBoileau\Oc\Php\Project5\DependencyInjection\TaggedServicesInterface;
+use TBoileau\Oc\Php\Project5\PropertyAccess\PropertyAccessorInterface;
 use TBoileau\Oc\Php\Project5\Validator\Constraint\ConstraintInterface;
 use TBoileau\Oc\Php\Project5\Validator\ValidationConstraint\ValidationConstraintInterface;
 
 final class Validator implements ValidatorInterface, TaggedServicesInterface
 {
     private ContainerInterface $container;
+
+    public function __construct(private PropertyAccessorInterface $propertyAccessor)
+    {
+    }
 
     public function setContainer(ContainerInterface $container): void
     {
@@ -34,10 +39,9 @@ final class Validator implements ValidatorInterface, TaggedServicesInterface
             foreach ($property->getAttributes() as $attribute) {
                 $reflectionClass = new ReflectionClass($attribute->getName());
                 if ($reflectionClass->implementsInterface(ConstraintInterface::class)) {
-                    $property->setAccessible(true);
-                    $value = $property->getValue($object);
+                    $value = $this->propertyAccessor->getValue($object, $property->getName());
                     /** @var ConstraintInterface $constraint */
-                    $constraint = $reflectionClass->newInstance();
+                    $constraint = $reflectionClass->newInstance(...$attribute->getArguments());
                     $this->validateChild(
                         new ValidationContext(
                             $constraintViolationList,
@@ -56,7 +60,7 @@ final class Validator implements ValidatorInterface, TaggedServicesInterface
     /**
      * @return array<array-key, string>
      */
-    public static function getTags(): array
+    public static function getTaggedServices(): array
     {
         return ['validator'];
     }

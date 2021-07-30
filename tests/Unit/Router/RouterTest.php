@@ -50,6 +50,16 @@ final class RouterTest extends KernelTestCase
     /**
      * @test
      */
+    public function ifRouteNotFoundWhenGenerateUrl(): void
+    {
+        $this->expectException(RouteNotFound::class);
+
+        $this->router->generateUrl('fail');
+    }
+
+    /**
+     * @test
+     */
     public function ifRouteNotFound(): void
     {
         $this->expectException(RouteNotFound::class);
@@ -90,7 +100,27 @@ final class RouterTest extends KernelTestCase
     /**
      * @test
      */
-    public function ifRouteWithParametersIsFound(): void
+    public function ifRouteWithParametersWithoutRequirementsIsFound(): void
+    {
+        $this->router->add(
+            Route::create(
+                'baz',
+                '/baz/:qux',
+                FooController::class,
+                'baz',
+            )
+        );
+
+        $response = $this->router->run(Request::create('/baz/corge'));
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertStringContainsString('corge', $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function ifRouteWithParametersAndRequirementsIsFound(): void
     {
         $this->router->add(
             Route::create(

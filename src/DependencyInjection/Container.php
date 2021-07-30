@@ -7,6 +7,8 @@ namespace TBoileau\Oc\Php\Project5\DependencyInjection;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
+use Symfony\Component\Finder\Finder;
+use function Symfony\Component\String\u;
 
 final class Container implements ContainerInterface
 {
@@ -40,10 +42,10 @@ final class Container implements ContainerInterface
      */
     private array $tags = [];
 
-    public function __construct()
-    {
-        $this->services[$this::class] = $this;
-    }
+    /**
+     * @var ?array<array-key, class-string>
+     */
+    private ?array $classes = null;
 
     /**
      * @throws ReflectionException
@@ -66,6 +68,7 @@ final class Container implements ContainerInterface
             } else {
                 $reflectionClass = new ReflectionClass($id);
                 $constructorArgs = [];
+
                 if (null !== $reflectionClass->getConstructor()) {
                     $constructorArgs = array_map(
                         [$this, 'getService'],
@@ -89,7 +92,7 @@ final class Container implements ContainerInterface
 
                 if ($reflectionClass->implementsInterface(TaggedServicesInterface::class)) {
                     $serviceLocator = new Container();
-                    foreach ($service::getTags() as $tag) {
+                    foreach ($service::getTaggedServices() as $tag) {
                         foreach ($this->tags[$tag] ?? [] as $services) {
                             $serviceLocator->register($services, $this->get($services));
                         }
@@ -152,17 +155,64 @@ final class Container implements ContainerInterface
         return $this;
     }
 
-    public function instanceOf(string $interface, string $tag): ContainerInterface
+    /**
+     * @param array<array-key, class-string> $excludes
+     */
+    public function resource(string $namespace, string $tag, array $excludes = []): ContainerInterface
     {
-        $classes = get_declared_classes();
+        $this->loadClasses();
 
-        foreach ($classes as $class) {
+        foreach ($this->classes as $class) {
             $reflectionClass = new ReflectionClass($class);
-            if ($reflectionClass->implementsInterface($interface)) {
+
+            if (u($reflectionClass->getNamespaceName())->startsWith($namespace) && !in_array($class, $excludes)) {
                 $this->tags[$tag][] = $reflectionClass->getName();
             }
         }
 
         return $this;
+    }
+
+    public function instanceOf(string $interface, string $tag): ContainerInterface
+    {
+        $this->loadClasses();
+
+        foreach ($this->classes as $class) {
+            $reflectionClass = new ReflectionClass($class);
+
+            if (!$reflectionClass->isInterface() && $reflectionClass->implementsInterface($interface)) {
+                $this->tags[$tag][] = $reflectionClass->getName();
+            }
+        }
+
+        return $this;
+    }
+
+    private function loadClasses(): void
+    {
+        if (null === $this->classes) {
+            $namespaces = require sprintf('%s/composer/autoload_psr4.php', $this->parameters['vendor_dir']);
+
+            foreach ($namespaces as $prefix => $path) {
+                if (!u($prefix)->startsWith('TBoileau\\Oc\\Php\\Project5')) {
+                    continue;
+                }
+
+                $finder = Finder::create();
+
+                $finder->files()
+                    ->in($path)
+                    ->notName('bootstrap.php')
+                    ->name('*.php');
+
+                foreach ($finder as $class) {
+                    $this->classes[] = u($class->getRelativePathname())
+                        ->ensureStart($prefix)
+                        ->replace('/', '\\')
+                        ->replace('.php', '')
+                        ->toString();
+                }
+            }
+        }
     }
 }

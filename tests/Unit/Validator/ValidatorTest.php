@@ -23,6 +23,11 @@ final class ValidatorTest extends KernelTestCase
         /** @var ValidatorInterface $validator */
         $validator = $kernel->getContainer()->get(ValidatorInterface::class);
 
-        $this->assertCount(1, $validator->validate($foo));
+        $constraintViolationList = $validator->validate($foo);
+
+        $this->assertCount(1, $constraintViolationList);
+
+        $this->assertEquals('Bar ne doit pas être vide.', $constraintViolationList[0]->getMessage());
+        $this->assertEquals('bar', $constraintViolationList[0]->getPath());
     }
 }

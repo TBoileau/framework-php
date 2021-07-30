@@ -8,17 +8,21 @@ use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use TBoileau\Oc\Php\Project5\DependencyInjection\TaggedServicesInterface;
 use TBoileau\Oc\Php\Project5\Router\Exception\RouteNotFound;
 
-final class Router implements RouterInterface
+final class Router implements RouterInterface, TaggedServicesInterface
 {
     /**
      * @var array<string, Route>
      */
     private array $routes = [];
 
-    public function __construct(private ContainerInterface $container)
+    private ContainerInterface $container;
+
+    public function setContainer(ContainerInterface $container): void
     {
+        $this->container = $container;
     }
 
     public function add(Route $route): RouterInterface
@@ -66,5 +70,13 @@ final class Router implements RouterInterface
         }
 
         throw new RouteNotFound(sprintf('No route found for %s.', $request->getRequestUri()));
+    }
+
+    /**
+     * @return array<array-key, string>
+     */
+    public static function getTaggedServices(): array
+    {
+        return ['controller'];
     }
 }

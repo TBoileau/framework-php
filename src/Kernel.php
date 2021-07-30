@@ -6,8 +6,11 @@ namespace TBoileau\Oc\Php\Project5;
 
 use Psr\Container\ContainerInterface as PsrContainer;
 use Symfony\Component\HttpFoundation\Request;
+use TBoileau\Oc\Php\Project5\Controller\AbstractController;
 use TBoileau\Oc\Php\Project5\DependencyInjection\Container;
 use TBoileau\Oc\Php\Project5\DependencyInjection\ContainerInterface;
+use TBoileau\Oc\Php\Project5\PropertyAccess\PropertyAccessor;
+use TBoileau\Oc\Php\Project5\PropertyAccess\PropertyAccessorInterface;
 use TBoileau\Oc\Php\Project5\Router\Router;
 use TBoileau\Oc\Php\Project5\Router\RouterInterface;
 use TBoileau\Oc\Php\Project5\Templating\Templating;
@@ -44,6 +47,9 @@ final class Kernel
     {
         $this->container
             ->setParameter('env', $this->env)
+            ->setParameter('source_dir', __DIR__)
+            ->setParameter('tests_dir', __DIR__.'/../tests')
+            ->setParameter('vendor_dir', __DIR__.'/../vendor')
             ->setParameter('cache_dir', sprintf('%s/../var/cache/%s', __DIR__, $this->env))
             ->setParameter('templates_dirs', [__DIR__.'/../templates']);
     }
@@ -60,8 +66,10 @@ final class Kernel
             ->alias(TemplatingInterface::class, Templating::class)
             ->alias(TwigFactoryInterface::class, TwigFactory::class)
             ->alias(ValidatorInterface::class, Validator::class)
+            ->alias(PropertyAccessorInterface::class, PropertyAccessor::class)
             ->factory(Environment::class, TwigFactoryInterface::class)
-            ->instanceOf(ValidationConstraintInterface::class, 'validator');
+            ->instanceOf(ValidationConstraintInterface::class, 'validator')
+            ->resource('TBoileau\\Oc\\Php\\Project5\\Controller', 'controller', [AbstractController::class]);
     }
 
     public function configureRoutes(): void
