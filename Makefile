@@ -18,7 +18,7 @@ stylelint:
 composer:
 	composer valid
 
-phpinsight:
+phpinsights:
 	vendor/bin/phpinsights --no-interaction
 
 phpcpd:
@@ -44,7 +44,7 @@ analyse:
 	make twig
 	make phpcpd
 	make phpmd
-	make phpinsight
+	make phpinsights
 
 unit-tests:
 	php vendor/bin/phpunit --testdox --testsuite=unit

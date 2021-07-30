@@ -42,14 +42,15 @@ final class Kernel
         $this->container
             ->setParameter('env', $this->env)
             ->setParameter('cache_dir', sprintf('%s/../var/cache/%s', __DIR__, $this->env))
-            ->setParameter('templates_dir', __DIR__.'/../templates');
+            ->setParameter('templates_dirs', [__DIR__.'/../templates']);
     }
 
     public function configureServices(): void
     {
         $this->container
+            ->bind('env', $this->container->get('env'))
             ->bind('cacheDir', $this->container->get('cache_dir'))
-            ->bind('templatesDir', $this->container->get('templates_dir'))
+            ->bind('templatesDirs', $this->container->get('templates_dirs'))
             ->alias(RouterInterface::class, Router::class)
             ->alias(PsrContainer::class, Container::class)
             ->alias(ContainerInterface::class, Container::class)

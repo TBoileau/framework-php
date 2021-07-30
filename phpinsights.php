@@ -6,9 +6,11 @@ use NunoMaduro\PhpInsights\Domain\Insights\CyclomaticComplexityIsHigh;
 use NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
+use SlevomatCodingStandard\Sniffs\Classes\SuperfluousAbstractClassNamingSniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
+use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
 
 return [
     /*
@@ -70,11 +72,16 @@ return [
         SpaceAfterNotSniff::class,
         ForbiddenSetterSniff::class,
         SuperfluousInterfaceNamingSniff::class,
+        DisallowMixedTypeHintSniff::class,
+        SuperfluousAbstractClassNamingSniff::class,
     ],
 
     'config' => [
         FunctionLengthSniff::class => [
             'maxLinesLength' => 20,
+            'exclude' => [
+                'src/DependencyInjection/Container.php',
+            ],
         ],
         LineLengthSniff::class => [
             'lineLimit' => 120,
@@ -99,7 +106,7 @@ return [
 
     'requirements' => [
         'min-quality' => 90,
-        'min-complexity' => 75,
+        'min-complexity' => 85,
         'min-architecture' => 90,
         'min-style' => 100,
         'disable-security-check' => false,

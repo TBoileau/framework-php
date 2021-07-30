@@ -68,15 +68,13 @@ final class Container implements ContainerInterface
                     );
                 }
 
+                /** @var ServiceSubscriberInterface $service */
                 $service = $reflectionClass->newInstanceArgs($constructorArgs);
 
                 $this->register($id, $service);
 
                 if ($reflectionClass->implementsInterface(ServiceSubscriberInterface::class)) {
                     $serviceLocator = new Container();
-                    /**
-                     * @var $service ServiceSubscriberInterface
-                     */
                     foreach ($service::getSubscribedServices() as $subscribedService) {
                         $serviceLocator->register($subscribedService, $this->get($subscribedService));
                     }
