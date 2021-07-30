@@ -103,4 +103,16 @@ final class Route
     {
         return $this->method;
     }
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function generateUrl(array $context = []): string
+    {
+        return preg_replace_callback(
+            '/:(\w+)/',
+            static fn (array $parameters) => $context[$parameters[1]],
+            $this->path
+        );
+    }
 }
