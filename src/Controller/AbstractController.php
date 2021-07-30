@@ -7,11 +7,11 @@ namespace TBoileau\Oc\Php\Project5\Controller;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use TBoileau\Oc\Php\Project5\DependencyInjection\ServiceSubscriberInterface;
+use TBoileau\Oc\Php\Project5\DependencyInjection\ServicesSubscriberInterface;
 use TBoileau\Oc\Php\Project5\Router\RouterInterface;
 use TBoileau\Oc\Php\Project5\Templating\TemplatingInterface;
 
-abstract class AbstractController implements ServiceSubscriberInterface
+abstract class AbstractController implements ServicesSubscriberInterface
 {
     private ContainerInterface $container;
 
