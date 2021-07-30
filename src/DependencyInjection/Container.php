@@ -55,20 +55,34 @@ final class Container implements ContainerInterface
 
         if (!$this->has($id)) {
             if (isset($this->factories[$id])) {
-                $factory = $this->get($this->factories[$id]["class"]);
+                $factory = $this->get($this->factories[$id]['class']);
 
-                $this->services[$id] = call_user_func([$factory, $this->factories[$id]["method"]]);
+                $this->services[$id] = call_user_func([$factory, $this->factories[$id]['method']]);
             } else {
                 $reflectionClass = new ReflectionClass($id);
                 $constructorArgs = [];
                 if (null !== $reflectionClass->getConstructor()) {
                     $constructorArgs = array_map(
-                       [$this, 'getService'],
+                        [$this, 'getService'],
                         $reflectionClass->getConstructor()->getParameters()
                     );
                 }
 
-                $this->services[$id] = $reflectionClass->newInstanceArgs($constructorArgs);
+                $service = $reflectionClass->newInstanceArgs($constructorArgs);
+
+                $this->register($id, $service);
+
+                if ($reflectionClass->implementsInterface(ServiceSubscriberInterface::class)) {
+                    $serviceLocator = new Container();
+                    /**
+                     * @var $service ServiceSubscriberInterface
+                     */
+                    foreach ($service::getSubscribedServices() as $subscribedService) {
+                        $serviceLocator->register($subscribedService, $this->get($subscribedService));
+                    }
+
+                    $service->setContainer($serviceLocator);
+                }
             }
         }
 
@@ -113,6 +127,13 @@ final class Container implements ContainerInterface
     public function setParameter(string $id, mixed $value): ContainerInterface
     {
         $this->parameters[$id] = $value;
+
+        return $this;
+    }
+
+    public function register(string $id, mixed $value): ContainerInterface
+    {
+        $this->services[$id] = $value;
 
         return $this;
     }

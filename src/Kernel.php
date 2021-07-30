@@ -42,7 +42,7 @@ final class Kernel
         $this->container
             ->setParameter('env', $this->env)
             ->setParameter('cache_dir', sprintf('%s/../var/cache/%s', __DIR__, $this->env))
-            ->setParameter('templates_dir', __DIR__ . '/../templates');
+            ->setParameter('templates_dir', __DIR__.'/../templates');
     }
 
     public function configureServices(): void
