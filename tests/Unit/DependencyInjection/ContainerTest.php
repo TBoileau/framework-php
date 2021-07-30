@@ -6,8 +6,8 @@ namespace TBoileau\Oc\Php\Project5\Tests\Unit\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use TBoileau\Oc\Php\Project5\DependencyInjection\Container;
-use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\BarService;
-use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\FooService;
+use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Services\BarService;
+use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Services\FooService;
 
 final class ContainerTest extends TestCase
 {
