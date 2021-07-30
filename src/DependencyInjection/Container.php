@@ -52,6 +52,7 @@ final class Container implements ContainerInterface
             }
             $this->services[$id] = $reflectionClass->newInstanceArgs($constructorArgs);
         }
+
         return $this->services[$id];
     }
 

@@ -22,6 +22,11 @@ final class Route
     private array $requirements;
 
     /**
+     * @var array<array-key, string>
+     */
+    private array $args = [];
+
+    /**
      * @var array<string, string>
      */
     private array $matches = [];
@@ -50,7 +55,7 @@ final class Route
     {
         $pattern = preg_replace_callback('/:(\w+)/', [$this, 'parameterMatch'], $this->path);
 
-        $pattern = sprintf('#%s#', $pattern);
+        $pattern = sprintf('#^%s$#', $pattern);
 
         if (!preg_match($pattern, $request->getRequestUri(), $this->matches)) {
             return false;
@@ -58,11 +63,20 @@ final class Route
 
         array_shift($this->matches);
 
+        $this->matches = array_combine($this->args, $this->matches);
+
         return true;
     }
 
-    public function parameterMatch(string $parameter): string
+    /**
+     * @param array<string, string> $parameters
+     */
+    public function parameterMatch(array $parameters): string
     {
+        $parameter = $parameters[1];
+
+        $this->args[] = $parameter;
+
         if (isset($this->requirements[$parameter])) {
             return sprintf('(%s)', $this->requirements[$parameter]);
         }

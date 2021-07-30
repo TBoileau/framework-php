@@ -7,10 +7,15 @@ namespace TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class PostController
+final class FooController
 {
-    public function home(Request $request): Response
+    public function bar(): Response
     {
         return new Response('Hello world !');
+    }
+
+    public function baz(Request $request, string $qux): Response
+    {
+        return new Response($qux);
     }
 }

@@ -11,7 +11,7 @@ use TBoileau\Oc\Php\Project5\DependencyInjection\ContainerInterface;
 use TBoileau\Oc\Php\Project5\Kernel;
 use TBoileau\Oc\Php\Project5\Router\Route;
 use TBoileau\Oc\Php\Project5\Router\RouterInterface;
-use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Controller\PostController;
+use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Controller\FooController;
 
 final class KernelTest extends TestCase
 {
@@ -31,7 +31,7 @@ final class KernelTest extends TestCase
         /** @var RouterInterface $router */
         $router = $container->get(RouterInterface::class);
 
-        $router->add(Route::create('home', '/', PostController::class, 'home'));
+        $router->add(Route::create('bar', '/', FooController::class, 'bar'));
 
         ob_start();
         $kernel->run();
