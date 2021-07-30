@@ -81,6 +81,7 @@ return [
             'maxLinesLength' => 20,
             'exclude' => [
                 'src/DependencyInjection/Container.php',
+                'src/Validator/Validator.php',
             ],
         ],
         LineLengthSniff::class => [
@@ -90,6 +91,9 @@ return [
         ],
         CyclomaticComplexityIsHigh::class => [
             'maxComplexity' => 10,
+            'exclude' => [
+                'src/DependencyInjection/Container.php',
+            ],
         ],
     ],
 
@@ -106,7 +110,7 @@ return [
 
     'requirements' => [
         'min-quality' => 90,
-        'min-complexity' => 85,
+        'min-complexity' => 90,
         'min-architecture' => 90,
         'min-style' => 100,
         'disable-security-check' => false,

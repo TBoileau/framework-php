@@ -26,7 +26,9 @@
         "twig/twig": "^3.3",
         "symfony/http-foundation": "^5.3",
         "psr/container": "^1.0",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "symfony/expression-language": "^5.3",
+        "beberlei/assert": "^3.3"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.3",

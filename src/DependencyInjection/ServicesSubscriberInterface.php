@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TBoileau\Oc\Php\Project5\DependencyInjection;
 
-interface ServiceSubscriberInterface
+interface ServicesSubscriberInterface
 {
     public function setContainer(\Psr\Container\ContainerInterface $container): void;
 

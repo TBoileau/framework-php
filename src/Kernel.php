@@ -14,6 +14,9 @@ use TBoileau\Oc\Php\Project5\Templating\Templating;
 use TBoileau\Oc\Php\Project5\Templating\TemplatingInterface;
 use TBoileau\Oc\Php\Project5\Templating\TwigFactory;
 use TBoileau\Oc\Php\Project5\Templating\TwigFactoryInterface;
+use TBoileau\Oc\Php\Project5\Validator\ValidationConstraint\ValidationConstraintInterface;
+use TBoileau\Oc\Php\Project5\Validator\Validator;
+use TBoileau\Oc\Php\Project5\Validator\ValidatorInterface;
 use Twig\Environment;
 
 final class Kernel
@@ -56,7 +59,9 @@ final class Kernel
             ->alias(ContainerInterface::class, Container::class)
             ->alias(TemplatingInterface::class, Templating::class)
             ->alias(TwigFactoryInterface::class, TwigFactory::class)
-            ->factory(Environment::class, TwigFactoryInterface::class);
+            ->alias(ValidatorInterface::class, Validator::class)
+            ->factory(Environment::class, TwigFactoryInterface::class)
+            ->instanceOf(ValidationConstraintInterface::class, 'validator');
     }
 
     public function configureRoutes(): void
