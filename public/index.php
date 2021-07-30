@@ -11,5 +11,5 @@ use TBoileau\Oc\Php\Project5\Kernel;
 $dotenv = new Dotenv();
 $dotenv->loadEnv(__DIR__.'/.env');
 
-$kernel = new Kernel($_ENV['APP_ENV'], Request::createFromGlobals());
-$kernel->run();
+$kernel = new Kernel($_ENV['APP_ENV']);
+$kernel->run(Request::createFromGlobals());

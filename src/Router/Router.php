@@ -29,6 +29,20 @@ final class Router implements RouterInterface
     }
 
     /**
+     * @param array<string, mixed> $context
+     */
+    public function generateUrl(string $route, array $context = []): string
+    {
+        if (!isset($this->routes[$route])) {
+            throw new RouteNotFound(sprintf('Route %s not found.', $route));
+        }
+
+        $route = $this->routes[$route];
+
+        return $route->generateUrl($context);
+    }
+
+    /**
      * @throws \ReflectionException
      */
     public function run(Request $request): Response

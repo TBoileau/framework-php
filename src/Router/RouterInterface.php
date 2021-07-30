@@ -7,7 +7,7 @@ namespace TBoileau\Oc\Php\Project5\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-interface RouterInterface
+interface RouterInterface extends UrlGeneratorInterface
 {
     public function add(Route $route): RouterInterface;
 

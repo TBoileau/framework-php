@@ -4,29 +4,57 @@ declare(strict_types=1);
 
 namespace TBoileau\Oc\Php\Project5\Tests\Unit\Router;
 
-use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TBoileau\Oc\Php\Project5\DependencyInjection\Container;
 use TBoileau\Oc\Php\Project5\Router\Exception\RouteNotFound;
 use TBoileau\Oc\Php\Project5\Router\Route;
-use TBoileau\Oc\Php\Project5\Router\Router;
+use TBoileau\Oc\Php\Project5\Router\RouterInterface;
+use TBoileau\Oc\Php\Project5\Tests\KernelTestCase;
 use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Controller\FooController;
 
-final class RouterTest extends TestCase
+final class RouterTest extends KernelTestCase
 {
+    private RouterInterface $router;
+
+    protected function setUp(): void
+    {
+        $kernel = static::bootKernel();
+        $this->router = $kernel->getContainer()->get(RouterInterface::class);
+    }
+
+    /**
+     * @test
+     */
+    public function ifRouterUrlGeneratorWorks(): void
+    {
+        $this->router->add(Route::create('bar', '/', FooController::class, 'bar'));
+
+        $this->router->add(
+            Route::create(
+                'quux',
+                '/quux',
+                FooController::class,
+                'quux',
+            )
+        );
+
+        $this->assertInstanceOf(
+            RedirectResponse::class,
+            $this->router->run(
+                Request::create($this->router->generateUrl('quux'))
+            )
+        );
+    }
+
     /**
      * @test
      */
     public function ifRouteNotFound(): void
     {
-        $container = new Container();
-
-        $router = new Router($container);
-
         $this->expectException(RouteNotFound::class);
 
-        $router->run(Request::create('/'));
+        $this->router->run(Request::create('/'));
     }
 
     /**
@@ -34,12 +62,9 @@ final class RouterTest extends TestCase
      */
     public function ifRouteWithoutParameterIsFound(): void
     {
-        $container = new Container();
+        $this->router->add(Route::create('bar', '/', FooController::class, 'bar'));
 
-        $router = new Router($container);
-        $router->add(Route::create('foo', '/', FooController::class, 'bar'));
-
-        $this->assertInstanceOf(Response::class, $router->run(Request::create('/')));
+        $this->assertInstanceOf(Response::class, $this->router->run(Request::create('/')));
     }
 
     /**
@@ -47,10 +72,7 @@ final class RouterTest extends TestCase
      */
     public function ifRouteWithBadParameter(): void
     {
-        $container = new Container();
-
-        $router = new Router($container);
-        $router->add(
+        $this->router->add(
             Route::create(
                 'baz',
                 '/baz/:qux',
@@ -62,7 +84,7 @@ final class RouterTest extends TestCase
 
         $this->expectException(RouteNotFound::class);
 
-        $router->run(Request::create('/baz/corge'));
+        $this->router->run(Request::create('/baz/corge'));
     }
 
     /**
@@ -70,20 +92,17 @@ final class RouterTest extends TestCase
      */
     public function ifRouteWithParametersIsFound(): void
     {
-        $container = new Container();
-
-        $router = new Router($container);
-        $router->add(
+        $this->router->add(
             Route::create(
                 'baz',
                 '/baz/:qux',
                 FooController::class,
                 'baz',
-                ['qux' => '\w+', 'quux' => '\w+']
+                ['qux' => '\w+']
             )
         );
 
-        $response = $router->run(Request::create('/baz/corge'));
+        $response = $this->router->run(Request::create('/baz/corge'));
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertStringContainsString('corge', $response->getContent());

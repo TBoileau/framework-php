@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use TBoileau\Oc\Php\Project5\Controller\AbstractController;
 
-final class FooController
+final class FooController extends AbstractController
 {
     public function bar(): Response
     {
-        return new Response('Hello world !');
+        return $this->render('bar.html.twig');
     }
 
     public function baz(Request $request, string $qux): Response
     {
-        return new Response($qux);
+        return $this->render('baz.html.twig', ['qux' => $qux]);
+    }
+
+    public function quux(): RedirectResponse
+    {
+        return $this->redirect('bar');
     }
 }
