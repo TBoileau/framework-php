@@ -17,4 +17,6 @@ interface ContainerInterface extends BaseContainer
     public function register(string $id, mixed $value): ContainerInterface;
 
     public function factory(string $id, string $factory, string $method = 'create'): ContainerInterface;
+
+    public function instanceOf(string $interface, string $tag): ContainerInterface;
 }

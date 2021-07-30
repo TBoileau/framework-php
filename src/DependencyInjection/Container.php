@@ -35,6 +35,11 @@ final class Container implements ContainerInterface
      */
     private array $factories = [];
 
+    /**
+     * @var array<string, array<array-key, class-string>>
+     */
+    private array $tags = [];
+
     public function __construct()
     {
         $this->services[$this::class] = $this;
@@ -68,15 +73,26 @@ final class Container implements ContainerInterface
                     );
                 }
 
-                /** @var ServiceSubscriberInterface $service */
+                /** @var ServicesSubscriberInterface|TaggedServicesInterface $service */
                 $service = $reflectionClass->newInstanceArgs($constructorArgs);
 
                 $this->register($id, $service);
 
-                if ($reflectionClass->implementsInterface(ServiceSubscriberInterface::class)) {
+                if ($reflectionClass->implementsInterface(ServicesSubscriberInterface::class)) {
                     $serviceLocator = new Container();
                     foreach ($service::getSubscribedServices() as $subscribedService) {
                         $serviceLocator->register($subscribedService, $this->get($subscribedService));
+                    }
+
+                    $service->setContainer($serviceLocator);
+                }
+
+                if ($reflectionClass->implementsInterface(TaggedServicesInterface::class)) {
+                    $serviceLocator = new Container();
+                    foreach ($service::getTags() as $tag) {
+                        foreach ($this->tags[$tag] ?? [] as $services) {
+                            $serviceLocator->register($services, $this->get($services));
+                        }
                     }
 
                     $service->setContainer($serviceLocator);
@@ -132,6 +148,20 @@ final class Container implements ContainerInterface
     public function register(string $id, mixed $value): ContainerInterface
     {
         $this->services[$id] = $value;
+
+        return $this;
+    }
+
+    public function instanceOf(string $interface, string $tag): ContainerInterface
+    {
+        $classes = get_declared_classes();
+
+        foreach ($classes as $class) {
+            $reflectionClass = new ReflectionClass($class);
+            if ($reflectionClass->implementsInterface($interface)) {
+                $this->tags[$tag][] = $reflectionClass->getName();
+            }
+        }
 
         return $this;
     }
