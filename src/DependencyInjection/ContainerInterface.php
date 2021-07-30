@@ -10,6 +10,8 @@ interface ContainerInterface extends BaseContainer
 {
     public function alias(string $alias, string $id): ContainerInterface;
 
+    public function bind(string $key, mixed $value): ContainerInterface;
+
     public function setParameter(string $id, mixed $value): ContainerInterface;
 
     public function factory(string $id, string $factory, string $method = 'create'): ContainerInterface;

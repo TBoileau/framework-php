@@ -48,6 +48,8 @@ final class Kernel
     public function configureServices(): void
     {
         $this->container
+            ->bind('cacheDir', $this->container->get('cache_dir'))
+            ->bind('templatesDir', $this->container->get('templates_dir'))
             ->alias(RouterInterface::class, Router::class)
             ->alias(PsrContainer::class, Container::class)
             ->alias(ContainerInterface::class, Container::class)

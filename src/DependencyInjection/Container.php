@@ -11,7 +11,7 @@ use ReflectionParameter;
 final class Container implements ContainerInterface
 {
     /**
-     * @var array<class-string, object>
+     * @var array<class-string, mixed>
      */
     private array $services;
 
@@ -24,6 +24,11 @@ final class Container implements ContainerInterface
      * @var array<class-string, class-string>
      */
     private array $alias = [];
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $bind = [];
 
     /**
      * @var array<class-string, array<string, class-string|string>>
@@ -58,7 +63,7 @@ final class Container implements ContainerInterface
                 $constructorArgs = [];
                 if (null !== $reflectionClass->getConstructor()) {
                     $constructorArgs = array_map(
-                        fn (ReflectionParameter $parameter) => $this->get((string) $parameter->getType()),
+                       [$this, 'getService'],
                         $reflectionClass->getConstructor()->getParameters()
                     );
                 }
@@ -70,6 +75,21 @@ final class Container implements ContainerInterface
         return $this->services[$id];
     }
 
+    public function getService(ReflectionParameter $parameter): mixed
+    {
+        if (isset($this->bind[$parameter->getName()])) {
+            return $this->bind[$parameter->getName()];
+        }
+
+        return $this->get((string) $parameter->getType());
+    }
+
+    public function bind(string $key, mixed $value): ContainerInterface
+    {
+        $this->bind[$key] = $value;
+
+        return $this;
+    }
 
     public function has(string $id): bool
     {
