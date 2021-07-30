@@ -10,39 +10,61 @@ use TBoileau\Oc\Php\Project5\DependencyInjection\Container;
 use TBoileau\Oc\Php\Project5\DependencyInjection\ContainerInterface;
 use TBoileau\Oc\Php\Project5\Router\Router;
 use TBoileau\Oc\Php\Project5\Router\RouterInterface;
+use TBoileau\Oc\Php\Project5\Templating\Templating;
+use TBoileau\Oc\Php\Project5\Templating\TemplatingInterface;
+use TBoileau\Oc\Php\Project5\Templating\TwigFactory;
+use TBoileau\Oc\Php\Project5\Templating\TwigFactoryInterface;
+use Twig\Environment;
 
 final class Kernel
 {
     private ContainerInterface $container;
 
-    private Request $request;
+    private string $env;
 
-    public function __construct(string $env, Request $request)
+    public function __construct(string $env)
     {
-        $this->request = $request;
+        $this->env = $env;
         $this->container = new Container();
-        $this->container->setParameter('env', $env);
 
+        $this->configureParameters();
         $this->configureServices();
         $this->configureRoutes();
     }
 
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
+
+    public function configureParameters(): void
+    {
+        $this->container
+            ->setParameter('env', $this->env)
+            ->setParameter('cache_dir', sprintf('%s/../var/cache/%s', __DIR__, $this->env))
+            ->setParameter('templates_dir', __DIR__ . '/../templates');
+    }
+
     public function configureServices(): void
     {
-        $this->container->alias(RouterInterface::class, Router::class);
-        $this->container->alias(PsrContainer::class, Container::class);
-        $this->container->alias(ContainerInterface::class, Container::class);
+        $this->container
+            ->alias(RouterInterface::class, Router::class)
+            ->alias(PsrContainer::class, Container::class)
+            ->alias(ContainerInterface::class, Container::class)
+            ->alias(TemplatingInterface::class, Templating::class)
+            ->alias(TwigFactoryInterface::class, TwigFactory::class)
+            ->factory(Environment::class, TwigFactoryInterface::class);
     }
 
     public function configureRoutes(): void
     {
     }
 
-    public function run(): void
+    public function run(Request $request): void
     {
         /** @var RouterInterface $router */
         $router = $this->container->get(RouterInterface::class);
 
-        $router->run($this->request)->send();
+        $router->run($request)->send();
     }
 }
