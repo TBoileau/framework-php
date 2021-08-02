@@ -22,9 +22,25 @@ final class ConstraintViolationList implements Countable, Iterator, ArrayAccess
 
     private int $position;
 
+    public static function createFromArray(array $constraintViolations): ConstraintViolationList
+    {
+        $constraintViolationList = new self();
+
+        foreach ($constraintViolations as $constraintViolation) {
+            $constraintViolationList->add($constraintViolation);
+        }
+
+        return $constraintViolationList;
+    }
+
     public function add(ConstraintViolation $constraintViolation): void
     {
         $this->constraintViolations[] = $constraintViolation;
+    }
+
+    public function filter(callable $callable): ConstraintViolationList
+    {
+        return self::createFromArray(array_filter($this->constraintViolations, $callable));
     }
 
     /**
