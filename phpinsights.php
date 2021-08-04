@@ -6,8 +6,10 @@ use NunoMaduro\PhpInsights\Domain\Insights\CyclomaticComplexityIsHigh;
 use NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
+use SlevomatCodingStandard\Sniffs\Classes\ForbiddenPublicPropertySniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousAbstractClassNamingSniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff;
+use SlevomatCodingStandard\Sniffs\ControlStructures\AssignmentInConditionSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff;
@@ -77,14 +79,27 @@ return [
         SuperfluousInterfaceNamingSniff::class,
         DisallowMixedTypeHintSniff::class,
         SuperfluousAbstractClassNamingSniff::class,
+        AssignmentInConditionSniff::class,
     ],
 
     'config' => [
+        ForbiddenPublicPropertySniff::class => [
+            'exclude' => [
+                'src/ORM/Mapping/Attribute/PrimaryKey.php',
+                'src/ORM/Mapping/Attribute/Table.php',
+                'src/ORM/Mapping/Attribute/Entity.php',
+                'src/ORM/Mapping/Attribute/Column.php',
+                'src/ORM/Mapping/Attribute/OneToMany.php',
+                'src/ORM/Mapping/Attribute/ManyToOne.php',
+                'src/ORM/Mapping/Attribute/ManyToMany.php',
+            ],
+        ],
         FunctionLengthSniff::class => [
             'maxLinesLength' => 20,
             'exclude' => [
                 'src/DependencyInjection/Container.php',
                 'src/Validator/Validator.php',
+                'src/ORM/Mapping/Resolver.php',
             ],
         ],
         ParameterTypeHintSniff::class => [
@@ -101,6 +116,7 @@ return [
             'maxComplexity' => 10,
             'exclude' => [
                 'src/DependencyInjection/Container.php',
+                'src/ORM/Mapping/Resolver.php',
             ],
         ],
     ],

@@ -7,7 +7,7 @@ namespace TBoileau\Oc\Php\Project5\Tests\Unit\Form;
 use Symfony\Component\HttpFoundation\Request;
 use TBoileau\Oc\Php\Project5\Form\FormFactoryInterface;
 use TBoileau\Oc\Php\Project5\Tests\KernelTestCase;
-use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Entity\Foo;
+use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Model\Foo;
 
 final class FormTest extends KernelTestCase
 {

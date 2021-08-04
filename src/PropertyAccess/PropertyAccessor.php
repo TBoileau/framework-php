@@ -39,7 +39,7 @@ final class PropertyAccessor implements PropertyAccessorInterface
     /**
      * @throws ReflectionException
      */
-    public function setValue(object $object, string $propertyPath, mixed $value): void
+    public function setValue(object $object, string $propertyPath, mixed $value, bool $force = false): void
     {
         $reflectionClass = new ReflectionClass($object);
         $setter = sprintf('set%s', u($propertyPath)->camel()->title()->toString());
@@ -49,6 +49,12 @@ final class PropertyAccessor implements PropertyAccessorInterface
             return;
         }
         if ($reflectionClass->getProperty($propertyPath)->isPublic()) {
+            $reflectionClass->getProperty($propertyPath)->setValue($object, $value);
+
+            return;
+        }
+        if ($force) {
+            $reflectionClass->getProperty($propertyPath)->setAccessible(true);
             $reflectionClass->getProperty($propertyPath)->setValue($object, $value);
 
             return;

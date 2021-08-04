@@ -8,7 +8,7 @@ use TBoileau\Oc\Php\Project5\PropertyAccess\Exception\GetterNotFound;
 use TBoileau\Oc\Php\Project5\PropertyAccess\Exception\SetterNotFound;
 use TBoileau\Oc\Php\Project5\PropertyAccess\PropertyAccessorInterface;
 use TBoileau\Oc\Php\Project5\Tests\KernelTestCase;
-use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Entity\Foo;
+use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Model\Foo;
 
 final class PropertyAccessorTest extends KernelTestCase
 {

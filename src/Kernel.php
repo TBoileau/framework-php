@@ -11,6 +11,8 @@ use TBoileau\Oc\Php\Project5\DependencyInjection\Container;
 use TBoileau\Oc\Php\Project5\DependencyInjection\ContainerInterface;
 use TBoileau\Oc\Php\Project5\Form\FormFactory;
 use TBoileau\Oc\Php\Project5\Form\FormFactoryInterface;
+use TBoileau\Oc\Php\Project5\ORM\Mapping\Resolver;
+use TBoileau\Oc\Php\Project5\ORM\Mapping\ResolverInterface;
 use TBoileau\Oc\Php\Project5\PropertyAccess\PropertyAccessor;
 use TBoileau\Oc\Php\Project5\PropertyAccess\PropertyAccessorInterface;
 use TBoileau\Oc\Php\Project5\Router\Router;
@@ -70,6 +72,7 @@ final class Kernel
             ->alias(ValidatorInterface::class, Validator::class)
             ->alias(PropertyAccessorInterface::class, PropertyAccessor::class)
             ->alias(FormFactoryInterface::class, FormFactory::class)
+            ->alias(ResolverInterface::class, Resolver::class)
             ->factory(Environment::class, TwigFactoryInterface::class)
             ->instanceOf(ValidationConstraintInterface::class, 'validator')
             ->resource('TBoileau\\Oc\\Php\\Project5\\Controller', 'controller', [AbstractController::class]);

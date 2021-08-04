@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TBoileau\Oc\Php\Project5\Tests\Unit\Validator;
 
 use TBoileau\Oc\Php\Project5\Tests\KernelTestCase;
-use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Entity\Foo;
+use TBoileau\Oc\Php\Project5\Tests\Unit\Fixtures\Model\Foo;
 use TBoileau\Oc\Php\Project5\Validator\ValidatorInterface;
 
 final class ValidatorTest extends KernelTestCase
