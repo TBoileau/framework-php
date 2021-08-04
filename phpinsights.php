@@ -100,6 +100,7 @@ return [
                 'src/DependencyInjection/Container.php',
                 'src/Validator/Validator.php',
                 'src/ORM/Mapping/Resolver.php',
+                'src/ORM/QueryBuilder/Query.php',
             ],
         ],
         ParameterTypeHintSniff::class => [
